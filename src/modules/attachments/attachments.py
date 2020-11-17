@@ -259,7 +259,7 @@ class Attachments(UserList):
         if raw_dict["binary"]:
             try:
                 payload = base64.b64decode(raw_dict["payload"])
-            except TypeError, e:
+            except TypeError as e:
                 # https://gist.github.com/perrygeo/ee7c65bb1541ff6ac770
                 raw_dict["payload"] += "==="
                 log.warning(
@@ -352,7 +352,7 @@ class Attachments(UserList):
             if i.get("content_transfer_encoding") == "base64":
                 try:
                     payload = base64.b64decode(i["payload"])
-                except TypeError, e:
+                except TypeError as e:
                     try:
                         # try to add === to decode base64
                         payload = base64.b64decode(i["payload"] + "===")
