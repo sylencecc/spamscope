@@ -17,8 +17,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
-
 from modules import AbstractBolt, load_keywords_list, load_keywords_dict
 from modules.mails import check_phishing
 

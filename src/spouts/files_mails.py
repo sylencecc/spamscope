@@ -17,10 +17,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
 from datetime import date
 
-import Queue
+import queue
 import glob
 import os
 import shutil
@@ -43,7 +42,7 @@ class FilesMailSpout(AbstractSpout):
     def initialize(self, stormconf, context):
         super(FilesMailSpout, self).initialize(stormconf, context)
         self._check_conf()
-        self._queue = Queue.PriorityQueue()
+        self._queue = queue.PriorityQueue()
         self._count = 1
         self._load_mails()
 
@@ -82,7 +81,7 @@ class FilesMailSpout(AbstractSpout):
         """This function load mails in a priority queue. """
         self.log("Loading new mails for {!r}".format(self.component_name))
 
-        for k, v in self.conf["mailboxes"].iteritems():
+        for k, v in self.conf["mailboxes"].items():
             all_mails = set(glob.glob(os.path.join(
                 v["path_mails"], v["files_pattern"])))
             processing_mails = set(glob.glob(os.path.join(

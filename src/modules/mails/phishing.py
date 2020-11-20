@@ -18,7 +18,6 @@ limitations under the License.
 """
 
 
-from __future__ import absolute_import, print_function, unicode_literals
 from functools import partial
 import json
 
@@ -71,7 +70,7 @@ def check_urls(urls, keywords):
         boolean True if any keywords is in urls
     """
 
-    for domain, details in urls.iteritems():
+    for domain, details in urls.items():
         for i in details:
             if swt(i["url"], keywords):
                 return True
@@ -132,7 +131,7 @@ def check_phishing(**kwargs):
     for k, v in mapping_targets:
         if k:
             matcher = partial(swgk, k)
-            t = set(i for i in map(matcher, target_keys.iteritems()) if i)
+            t = set(i for i in map(matcher, target_keys.items()) if i)
             if t:
                 targets |= t
                 bitmap.set_property_score(v)

@@ -17,7 +17,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
 from abc import ABCMeta
 import os
 
@@ -45,9 +44,7 @@ MAIL_STRING = 1
 MAIL_PATH_OUTLOOK = 2
 
 
-class AbstractComponentMixin(object):
-
-    __metaclass__ = ABCMeta
+class AbstractComponentMixin(object, metaclass=ABCMeta):
 
     _options = ChainMap(os.environ, __defaults__)
 
@@ -73,9 +70,7 @@ class AbstractComponentMixin(object):
         return self._options
 
 
-class AbstractBolt(Bolt, AbstractComponentMixin):
-
-    __metaclass__ = ABCMeta
+class AbstractBolt(Bolt, AbstractComponentMixin, metaclass=ABCMeta):
 
     def initialize(self, stormconf, context):
         self._conf_loader()
@@ -85,9 +80,7 @@ class AbstractBolt(Bolt, AbstractComponentMixin):
         self._conf_loader()
 
 
-class AbstractSpout(Spout, AbstractComponentMixin):
-
-    __metaclass__ = ABCMeta
+class AbstractSpout(Spout, AbstractComponentMixin, metaclass=ABCMeta):
 
     def initialize(self, stormconf, context):
         self._conf_loader()

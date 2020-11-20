@@ -28,7 +28,7 @@ import warnings
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError, NotFoundError
 
-from elasticsearch_queries import query_sample
+from .elasticsearch_queries import query_sample
 
 
 current = os.path.realpath(os.path.dirname(__file__))

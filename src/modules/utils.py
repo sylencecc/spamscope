@@ -17,15 +17,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from __future__ import unicode_literals
-
 import copy
 import datetime
 import errno
 import functools
 import logging
 import os
-import cPickle as pickle
+import pickle
 import re
 import signal
 import tempfile
@@ -226,7 +224,7 @@ def load_keywords_list(obj_paths, lower=True):
     if not obj_paths:
         return keywords
 
-    for k, v in obj_paths.iteritems():
+    for k, v in obj_paths.items():
         temp = load_config(v)
 
         if not isinstance(temp, list):
@@ -246,7 +244,7 @@ def load_keywords_dict(obj_paths, lower=True):
     if not obj_paths:
         return keywords
 
-    for k, v in obj_paths.iteritems():
+    for k, v in obj_paths.items():
         temp = load_config(v)
 
         if not isinstance(temp, dict):
@@ -256,12 +254,12 @@ def load_keywords_dict(obj_paths, lower=True):
 
     if lower:
         keywords_lower = {}
-        for k, v in keywords.iteritems():
+        for k, v in keywords.items():
             keywords_lower[k] = {six.text_type(i).lower() for i in v}
         return keywords_lower
     else:
         keywords_str = {}
-        for k, v in keywords.iteritems():
+        for k, v in keywords.items():
             keywords_str[k] = {six.text_type(i) for i in v}
         return keywords_str
 
@@ -424,7 +422,7 @@ def load_whitelist(whitelists):
     if not whitelists:
         return whitelist
 
-    for k, v in whitelists.iteritems():
+    for k, v in whitelists.items():
         expiry = v.get('expiry')
         reload_ = True
 

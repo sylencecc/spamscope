@@ -18,8 +18,6 @@ limitations under the License.
 """
 
 
-from __future__ import absolute_import, print_function, unicode_literals
-
 from modules import AbstractBolt
 from modules.networks import processors
 from operator import itemgetter

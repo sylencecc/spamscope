@@ -40,12 +40,10 @@ class ScoreNotInteger(TypeError):
     pass
 
 
-class BitMap(object):
+class BitMap(object, metaclass=ABCMeta):
     """Abstract class to make bitmap, to give
     custom score to the properties of object.
     """
-
-    __metaclass__ = ABCMeta
 
     _map_name = "abstract"
 
@@ -197,7 +195,7 @@ class BitMap(object):
 
         properties = list()
 
-        for k, v in self.bitmap.iteritems():
+        for k, v in self.bitmap.items():
             if self.score & (1 << v):
                 properties.append(k)
 

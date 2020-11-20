@@ -17,14 +17,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
-
 import datetime
 import os
 import random
 import six
 from collections import deque
-from cPickle import PickleError
+from pickle import PickleError
 
 from streamparse import Stream
 import mailparser
