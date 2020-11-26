@@ -42,7 +42,6 @@ def obj_report(s):
     """
 
     SCORE_REGX = re.compile(r"score=([0-9\.]+)")
-    s = six.text_type(s, encoding="ascii", errors="ignore")
 
     message = email.message_from_string(s)
 
@@ -113,7 +112,7 @@ def analysis_from_file(fp):
             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
     stdoutdata, _ = out.communicate()
-    return stdoutdata
+    return stdoutdata.decode('utf-8')
 
 
 def report_from_string(s):

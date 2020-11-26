@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import base64
 import copy
 import datetime
 import errno
@@ -38,6 +39,7 @@ RE_URL = re.compile(r'((?:(?:ht|f)tp(?:s?)\:\/\/)'
 log = logging.getLogger(__name__)
 
 
+@functools.total_ordering
 class MailItem(object):
     def __init__(
         self,
@@ -58,18 +60,13 @@ class MailItem(object):
         self.mail_type = mail_type
         self.headers = headers
 
-    def __cmp__(self, other):
-        if self.priority > other.priority:
-            return 1
+    def __lt__(self, other):
         if self.priority < other.priority:
-            return -1
+            return True
+        return self.timestamp < other.timestamp
 
-        if self.timestamp > other.timestamp:
-            return 1
-        if self.timestamp < other.timestamp:
-            return -1
-
-        return 0
+    def __eq__(self, other):
+        return self.priority == other.priority and self.timestamp == other.timestamp
 
 
 class TimeoutError(Exception):
@@ -120,18 +117,18 @@ def write_payload(payload, extension, content_transfer_encoding="base64"):
     temp = tempfile.mkstemp()[1] + extension
 
     if content_transfer_encoding == "base64":
-        payload = payload.decode("base64")
+        payload = base64.b64decode(payload)
         with open(temp, "wb") as f:
             f.write(payload)
     else:
         with open(temp, "w") as f:
-            f.write(payload.encode("utf-8"))
+            f.write(payload)
 
     return temp
 
 
 def urls_extractor(text, faup):
-    """This function extract all url http(s) and ftp(s) from text.
+    """This function extracts all url http(s) and ftp(s) from text.
 
     Args:
         text (string): text string with urls to extract
@@ -164,6 +161,7 @@ def urls_extractor(text, faup):
     for i in set(match.group().strip() for match in RE_URL.finditer(text)):
         faup.decode(i)
         tokens = faup.get()
+        tokens['url'] = tokens['url'].decode('utf-8')
         if tokens["domain"]:
             results.setdefault(tokens["domain"], []).append(tokens)
     else:
@@ -197,7 +195,6 @@ def search_words_in_text(text, keywords):
         ]
     (word1 AND word2) OR word3 OR word4
     """
-
     text = text.lower()
     keywords = {six.text_type(k).lower() for k in keywords}
 
@@ -211,7 +208,7 @@ def search_words_in_text(text, keywords):
 def load_config(config_file):
     try:
         with open(config_file, 'r') as c:
-            return yaml.load(c)
+            return yaml.load(c, Loader=yaml.SafeLoader)
     except Exception:
         message = "Config file {} not loaded".format(config_file)
         log.exception(message)
@@ -462,7 +459,7 @@ def text2urls_whitelisted(text, whitelist, faup):
 
     if text:
         urls = urls_extractor(text, faup)
-        domains = urls.keys()
+        domains = list(urls.keys())
 
         for d in domains:
             if d.lower() in whitelist:

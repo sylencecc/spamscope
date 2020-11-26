@@ -36,7 +36,7 @@ except ImportError:
         "Thug is not installed. Follow these instructions:"
         " http://buffer.github.io/thug/doc/build.html")
 
-import PyV8
+import STPyV8
 import simplejson as json
 
 
@@ -89,7 +89,7 @@ class ThugAnalysis(ThugAPI):
         if log.Trace:
             sys.settrace(log.Trace)
 
-        with PyV8.JSLocker():
+        with STPyV8.JSLocker():
             with CustomWatchdog(log.ThugOpts.timeout,
                                 callback=self.watchdog_cb):
                 dft = DFT(window)

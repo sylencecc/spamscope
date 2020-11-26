@@ -36,16 +36,16 @@ class TestRedis(unittest.TestCase):
     def test_init(self):
         redis = Redis()
 
-        self.assertEquals(redis.hosts, ["127.0.0.1"])
-        self.assertEquals(redis.shuffle_hosts, True)
-        self.assertEquals(redis.port, 6379)
-        self.assertEquals(redis.db, 0)
-        self.assertEquals(redis.password, None)
-        self.assertEquals(redis.reconnect_interval, 1)
-        self.assertEquals(redis.max_retry, 60)
+        self.assertEqual(redis.hosts, ["127.0.0.1"])
+        self.assertEqual(redis.shuffle_hosts, True)
+        self.assertEqual(redis.port, 6379)
+        self.assertEqual(redis.db, 0)
+        self.assertEqual(redis.password, None)
+        self.assertEqual(redis.reconnect_interval, 1)
+        self.assertEqual(redis.max_retry, 60)
 
         redis.max_retry = 0
-        self.assertEquals(redis.max_retry, 0)
+        self.assertEqual(redis.max_retry, 0)
 
         with self.assertRaises(RuntimeError):
             redis = Redis(hosts=1)

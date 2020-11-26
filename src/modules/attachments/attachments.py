@@ -20,6 +20,7 @@ limitations under the License.
 from collections import UserList
 
 import base64
+import binascii
 import copy
 import datetime
 import logging
@@ -114,13 +115,13 @@ class Attachments(UserList):
 
                 if not i.get("is_archive"):
                     if i["content_transfer_encoding"] == "base64":
-                        text += base64.b64decode(i["payload"]) + "\n"
+                        text += base64.b64decode(i["payload"]).decode('utf-8') + "\n"
                     else:
                         text += i["payload"] + "\n"
                     continue
 
                 for j in i.get("files", []):
-                    text += base64.b64decode(j["payload"]) + "\n"
+                    text += base64.b64decode(j["payload"]).decode('utf-8') + "\n"
 
             except UnicodeDecodeError:
                 # This exception happens with binary payloads
@@ -254,7 +255,7 @@ class Attachments(UserList):
         if raw_dict["binary"]:
             try:
                 payload = base64.b64decode(raw_dict["payload"])
-            except TypeError as e:
+            except binascii.Error as e:
                 # https://gist.github.com/perrygeo/ee7c65bb1541ff6ac770
                 raw_dict["payload"] += "==="
                 log.warning(
@@ -319,7 +320,7 @@ class Attachments(UserList):
                                     t["extension"] = extension(filename)
                                     t["size"] = len(payload)
                                     t["Content-Type"] = content_type
-                                    t["payload"] = payload.encode("base64")
+                                    t["payload"] = base64.b64encode(payload).decode('utf-8')
                                     t["is_filtered"] = False
                                     t["md5"], t["sha1"], t["sha256"], \
                                         t["sha512"], t["ssdeep"] = \
@@ -340,19 +341,19 @@ class Attachments(UserList):
 
     @classmethod
     def withhashes(cls, attachments=[]):
-        """Alternative costructor that add hashes to the items. """
+        """Alternative costructor that adds hashes to the items. """
         r = copy.deepcopy(attachments)
 
         for i in r:
             if i.get("content_transfer_encoding") == "base64":
                 try:
                     payload = base64.b64decode(i["payload"])
-                except TypeError as e:
+                except binascii.Error as e:
                     try:
                         # try to add === to decode base64
                         payload = base64.b64decode(i["payload"] + "===")
-                    except TypeError:
-                        # if fails maybe is text, with fake base64 header
+                    except binascii.Error:
+                        # if fails maybe it's text with fake base64 header
                         payload = i["payload"]
                     finally:
                         i.setdefault("errors", []).append(

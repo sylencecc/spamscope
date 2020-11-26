@@ -188,8 +188,8 @@ class TestPostProcessing(unittest.TestCase):
         for i in attachments:
             self.assertIn("tika", i)
 
-    def test_tika_bug_unicode_error(self):
-        """Test add Tika processing."""
+    def test_tika_uuencode(self):
+        """Test Tika processing on an uuencoded archive."""
 
         from src.modules.attachments import tika
 
@@ -205,7 +205,7 @@ class TestPostProcessing(unittest.TestCase):
         attachments(intelligence=False)
         tika(conf, attachments)
 
-        self.assertNotIn("tika", attachments[0])
+        self.assertIn("tika", attachments[0])
 
     @unittest.skipIf(OPTIONS["THUG_ENABLED"].capitalize() == "False",
                      "Thug test skipped: "
@@ -271,10 +271,11 @@ class TestPostProcessing(unittest.TestCase):
         store_samples(conf, attachments)
 
         now = six.text_type(datetime.utcnow().date())
+        # Not an issue in py3, this extracts as expected
         sample = os.path.join(
             "/tmp",
             now,
-            "43573896890da36e092039cf0b3a92f8")
+            "43573896890da36e092039cf0b3a92f8_Swiftoutput·pdf.exe")
         self.assertTrue(os.path.exists(sample))
         shutil.rmtree(os.path.join("/tmp", now))
 
@@ -285,7 +286,7 @@ class TestPostProcessing(unittest.TestCase):
         sample = os.path.join(
             "/tmp",
             now,
-            "2ea90c996ca28f751d4841e6c67892b8_REQUEST FOR QUOTE.zip")
+            "30f0b27f89417fd363e7f44204512083_REQUEST FOR QUOTE.exe")
         self.assertTrue(os.path.exists(sample))
         shutil.rmtree(os.path.join("/tmp", now))
 

@@ -81,15 +81,15 @@ class TestDialect(unittest.TestCase):
         dialect = ["EHLO ", "MAIL FROM:", "RCPT TO:", "DATA", "QUIT"]
         dialect_not_mixed = mails.get_dialect(self.messages)
         dialect_mixed = mails.get_dialect(messages_mixed)
-        self.assertEquals(dialect_mixed, dialect_not_mixed)
-        self.assertEquals(dialect, dialect_mixed)
+        self.assertEqual(dialect_mixed, dialect_not_mixed)
+        self.assertEqual(dialect, dialect_mixed)
 
     def test_get_elastic_indices(self):
         indices = mails.get_elastic_indices()
         self.assertIsInstance(indices, str)
         indices = indices.split(",")
         self.assertIsInstance(indices, list)
-        self.assertEquals(len(indices), 2)
+        self.assertEqual(len(indices), 2)
 
     def test_get_messages_str(self):
         messages_str = mails.get_messages_str(self.messages)

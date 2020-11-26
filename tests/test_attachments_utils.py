@@ -106,10 +106,10 @@ class TestAttachmentsUtils(unittest.TestCase):
             payload_txt = f.read()
 
         content_type = contenttype(payload)
-        self.assertEquals("application/zip", content_type)
+        self.assertEqual("application/zip", content_type)
 
         content_type = contenttype(payload_txt)
-        self.assertEquals("application/x-empty", content_type)
+        self.assertEqual("application/x-empty", content_type)
 
     def test_extension(self):
         filename = "test.zip"

@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import base64
 import hashlib
 import logging
 import magic
@@ -106,9 +107,9 @@ def check_archive(data, write_sample=False):
     try:
         with open(temp, 'wb') as f:
             f.write(data)
-    except UnicodeEncodeError:
+    except TypeError:
         with open(temp, 'wb') as f:
-            f.write(data.encode("utf-8"))
+            f.write(data.encode('utf-8'))
 
     try:
         patoolib.test_archive(temp, verbosity=-1)
@@ -182,39 +183,21 @@ def write_sample(binary, payload, path, filename, hash_):
 
         if binary:
             with open(sample, "wb") as f:
-                f.write(payload.decode("base64"))
+                f.write(base64.b64decode(payload))
         else:
-            with open(sample, "w") as f:
+            with open(sample, "wb") as f:
                 f.write(payload.encode("utf-8"))
 
-    except (UnicodeError, IOError):
-        log.warning("UnicodeError/IOError for sample {!r}".format(hash_))
+    except UnicodeError:
+        log.warning("UnicodeError for sample {!r}".format(hash_))
 
         # Remove old file failed
-        try:
-            remove_file(sample)
-        except UnboundLocalError:
-            pass
+        remove_file(sample)
 
-        try:
-            sample = os.path.join(path, hash_)
-
-            if binary:
-                with open(sample, "wb") as f:
-                    f.write(payload.decode("base64"))
-            else:
-                with open(sample, "w") as f:
-                    f.write(payload.encode("utf-8"))
-        except UnicodeError:
-            log.warning("UnicodeError for sample {!r}".format(hash_))
-
-            # Remove old file failed
-            remove_file(sample)
-
-            # content_transfer_encoding': u'x-uuencode'
-            # it's not binary with strange encoding
-            with open(sample + "_failed_write.txt", "w") as f:
-                f.write("UnicodeError - Search sample on output report")
+        # content_transfer_encoding': u'x-uuencode'
+        # it's not binary with strange encoding
+        with open(sample + "_failed_write.txt", "w") as f:
+            f.write("UnicodeError - Search sample on output report")
 
 
 def remove_file(file_path):

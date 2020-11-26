@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import base64
 import logging
 import os
 
@@ -101,7 +102,7 @@ def tika(conf, attachments):
 
                     if a["content_transfer_encoding"] != "base64":
                         try:
-                            payload = payload.encode("base64")
+                            payload = base64.b64encode(payload.encode('utf-8')).decode('utf-8')
                         except UnicodeError:
                             # content_transfer_encoding': u'x-uuencode'
                             # it's not binary with strange encoding

@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import base64
 import logging
 import copy
 import datetime
@@ -121,11 +122,11 @@ class TestUtils(unittest.TestCase):
             utils.load_config("conf/fake.yml")
 
     def test_write_payload(self):
-        with open(text_file) as f:
+        with open(text_file, 'rb') as f:
             payload = f.read()
         sha1_origin = fingerprints(payload).sha1
 
-        file_path = utils.write_payload(payload.encode("base64"), ".txt")
+        file_path = utils.write_payload(base64.b64encode(payload), ".txt")
         self.assertEqual(os.path.splitext(file_path)[-1], ".txt")
 
         with open(file_path) as f:

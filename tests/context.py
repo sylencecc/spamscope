@@ -18,7 +18,7 @@ DEFAULTS = {
     "SHODAN_ENABLED": "False",
     "SPAMASSASSIN_ENABLED": "False",
     "THUG_ENABLED": "False",
-    "TIKA_APP_JAR": "/opt/tika/tika-app-1.18.jar",
+    "TIKA_APP_JAR": "/opt/tika-app-1.24.1.jar",
     "VIRUSTOTAL_ENABLED": "False",
     "ZEMANA_ENABLED": "False",
 }
