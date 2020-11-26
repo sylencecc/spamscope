@@ -8,6 +8,5 @@ patool
 pyparsing
 python-magic
 simplejson
-six
 ssdeep
 streamparse==3.15.1

@@ -23,7 +23,6 @@ import json
 
 from lxml import html
 from lxml.etree import ParserError
-import six
 
 from ..utils import (search_words_in_text as swt,
                      search_words_given_key as swgk)
@@ -106,10 +105,10 @@ def check_phishing(**kwargs):
     subject_keys = kwargs["subject_keys"]
 
     # Get all data
-    body = email.get('body', six.text_type())
-    subject = email.get('subject', six.text_type())
+    body = email.get('body', '')
+    subject = email.get('subject', '')
     # from mailparser 3.0.0 from is an object
-    from_ = email.get('from', six.text_type())
+    from_ = email.get('from', '')
     from_ = json.dumps(from_, ensure_ascii=False)
 
     # TODO: if an attachment is filtered, the score is not complete

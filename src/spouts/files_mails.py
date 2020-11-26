@@ -24,8 +24,6 @@ import glob
 import os
 import shutil
 
-import six
-
 from modules import (
     AbstractSpout,
     MAIL_PATH,
@@ -159,7 +157,7 @@ class FilesMailSpout(AbstractSpout):
                 self.log("Failed to remove {!r} mail".format(processing))
         else:
             try:
-                now = six.text_type(date.today())
+                now = str(date.today())
                 mail_path = os.path.join(self._where, now)
                 if not os.path.exists(mail_path):
                     os.makedirs(mail_path)

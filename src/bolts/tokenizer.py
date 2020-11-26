@@ -20,7 +20,6 @@ limitations under the License.
 import datetime
 import os
 import random
-import six
 from collections import deque
 from pickle import PickleError
 
@@ -176,8 +175,8 @@ class Tokenizer(AbstractBolt):
             if self.filter_mails:
                 if mail["sha1"] in self.analyzed_mails:
                     mail.pop("body", None)
-                    body = six.text_type()
-                    raw_mail = six.text_type()
+                    body = ''
+                    raw_mail = ''
                     is_filtered_mail = True
 
                 # Update database mails analyzed

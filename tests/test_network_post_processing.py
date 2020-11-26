@@ -19,7 +19,6 @@ limitations under the License.
 
 import logging
 import os
-import six
 import unittest
 import simplejson as json
 
@@ -58,7 +57,7 @@ class TestPostProcessing(unittest.TestCase):
         virustotal(conf, self.ipaddress, results)
         self.assertTrue(results)
         self.assertIn("virustotal", results)
-        self.assertIsInstance(results["virustotal"], six.text_type)
+        self.assertIsInstance(results["virustotal"], str)
         r = json.loads(results["virustotal"])
         self.assertTrue(r)
         self.assertIsInstance(r, dict)
@@ -80,7 +79,7 @@ class TestPostProcessing(unittest.TestCase):
         self.assertFalse(results)
         shodan(conf, self.ipaddress, results)
         self.assertIn("shodan", results)
-        self.assertIsInstance(results["shodan"], six.text_type)
+        self.assertIsInstance(results["shodan"], str)
         r = json.loads(results["shodan"])
         self.assertTrue(r)
         self.assertIsInstance(r, dict)
@@ -119,9 +118,9 @@ class TestPostProcessing(unittest.TestCase):
 
         self.assertTrue(results)
         self.assertIn("shodan", results)
-        self.assertIsInstance(results["shodan"], six.text_type)
+        self.assertIsInstance(results["shodan"], str)
         self.assertIn("virustotal", results)
-        self.assertIsInstance(results["virustotal"], six.text_type)
+        self.assertIsInstance(results["virustotal"], str)
 
 
 if __name__ == '__main__':

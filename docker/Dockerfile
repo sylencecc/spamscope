@@ -14,6 +14,7 @@ ENV FAUP_PATH="/opt/faup-master" \
     THUG_ENABLED="True" \
     TIKA_APP_JAR="/opt/tika-app-${TIKA_VER}.jar"
 
+# Copy SpamScope sources
 COPY ./ ${SPAMSCOPE_PATH}/
 
 # Install system packages

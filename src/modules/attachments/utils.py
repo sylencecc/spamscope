@@ -23,15 +23,10 @@ import logging
 import magic
 import os
 import patoolib
-import six
 import ssdeep
 import tempfile
 from collections import namedtuple
-
-try:
-    from functools import lru_cache
-except ImportError:
-    from backports.functools_lru_cache import lru_cache
+from functools import lru_cache
 
 try:
     from modules import urls_extractor
@@ -54,12 +49,8 @@ def fingerprints(data):
 
     Hashes = namedtuple('Hashes', "md5 sha1 sha256 sha512 ssdeep")
 
-    if six.PY2:
-        if not isinstance(data, str):
-            data = data.encode("utf-8")
-    elif six.PY3:
-        if not isinstance(data, bytes):
-            data = data.encode("utf-8")
+    if not isinstance(data, bytes):
+        data = data.encode("utf-8")
 
     # md5
     md5 = hashlib.md5()
@@ -221,5 +212,5 @@ def get_urls_tika(attachments, faup):
     """
     for i in attachments:
         if i.get("tika", False):
-            content = i["tika"].get("X-TIKA:content", six.text_type())
+            content = i["tika"].get("X-TIKA:content", '')
             return urls_extractor(content, faup)

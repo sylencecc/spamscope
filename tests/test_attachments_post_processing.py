@@ -19,7 +19,6 @@ limitations under the License.
 
 import logging
 import os
-import six
 import unittest
 import mailparser
 
@@ -270,7 +269,7 @@ class TestPostProcessing(unittest.TestCase):
         attachments(intelligence=False)
         store_samples(conf, attachments)
 
-        now = six.text_type(datetime.utcnow().date())
+        now = str(datetime.utcnow().date())
         # Not an issue in py3, this extracts as expected
         sample = os.path.join(
             "/tmp",
@@ -304,7 +303,7 @@ class TestPostProcessing(unittest.TestCase):
         attachments(intelligence=False)
         store_samples(conf, attachments)
 
-        now = six.text_type(datetime.utcnow().date())
+        now = str(datetime.utcnow().date())
         sample = os.path.join(
             "/tmp",
             now,

@@ -31,7 +31,6 @@ from operator import itemgetter
 
 import patoolib
 from patoolib.util import PatoolError
-import six
 
 from .exceptions import HashError, ContentTypeError
 from .post_processing import processors
@@ -91,7 +90,7 @@ class Attachments(UserList):
 
     def filenamestext(self):
         """Return a string with the filenames of all attachments. """
-        filenames = six.text_type()
+        filenames = ''
 
         for i in self:
             try:
@@ -106,7 +105,7 @@ class Attachments(UserList):
 
     def payloadstext(self):
         """Return a string with the not binary payloads of all attachments. """
-        text = six.text_type()
+        text = ''
 
         for i in self:
             try:

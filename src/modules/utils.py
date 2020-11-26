@@ -29,8 +29,6 @@ import re
 import signal
 import tempfile
 import time
-
-import six
 import yaml
 
 RE_URL = re.compile(r'((?:(?:ht|f)tp(?:s?)\:\/\/)'
@@ -155,7 +153,7 @@ def urls_extractor(text, faup):
     """
 
     # faup = Faup()
-    text = six.text_type(text)
+    text = str(text)
     results = {}
 
     for i in set(match.group().strip() for match in RE_URL.finditer(text)):
@@ -196,7 +194,7 @@ def search_words_in_text(text, keywords):
     (word1 AND word2) OR word3 OR word4
     """
     text = text.lower()
-    keywords = {six.text_type(k).lower() for k in keywords}
+    keywords = {str(k).lower() for k in keywords}
 
     for line in keywords:
         if all(True if w in text else False for w in line.split()):
@@ -228,9 +226,9 @@ def load_keywords_list(obj_paths, lower=True):
             raise RuntimeError("List {!r} not valid".format(k))
 
         if lower:
-            keywords |= {six.text_type(i).lower() for i in temp}
+            keywords |= {str(i).lower() for i in temp}
         else:
-            keywords |= {six.text_type(i) for i in temp}
+            keywords |= {str(i) for i in temp}
 
     return keywords
 
@@ -252,12 +250,12 @@ def load_keywords_dict(obj_paths, lower=True):
     if lower:
         keywords_lower = {}
         for k, v in keywords.items():
-            keywords_lower[k] = {six.text_type(i).lower() for i in v}
+            keywords_lower[k] = {str(i).lower() for i in v}
         return keywords_lower
     else:
         keywords_str = {}
         for k, v in keywords.items():
-            keywords_str[k] = {six.text_type(i) for i in v}
+            keywords_str[k] = {str(i) for i in v}
         return keywords_str
 
 

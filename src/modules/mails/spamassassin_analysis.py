@@ -24,7 +24,6 @@ import re
 import subprocess
 
 from astropy.io import ascii
-import six
 
 
 log = logging.getLogger(__name__)
@@ -101,15 +100,9 @@ def analysis_from_file(fp):
 
     command = ["spamassassin", "-t", fp]
 
-    if six.PY2:
-        with open(os.devnull, "w") as devnull:
-            out = subprocess.Popen(
-                command, stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE, stderr=devnull)
-    elif six.PY3:
-        out = subprocess.Popen(
-            command, stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    out = subprocess.Popen(
+        command, stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
     stdoutdata, _ = out.communicate()
     return stdoutdata.decode('utf-8')

@@ -23,8 +23,6 @@ import glob
 import os
 import shutil
 
-import six
-
 from modules import (
     AbstractSpout,
     is_file_older_than,
@@ -131,7 +129,7 @@ class IterFilesMailSpout(AbstractSpout):
                 self.log("Failed to remove {!r} mail".format(processing))
         else:
             try:
-                now = six.text_type(date.today())
+                now = str(date.today())
                 mail_path = os.path.join(self._where, now)
                 if not os.path.exists(mail_path):
                     os.makedirs(mail_path)
