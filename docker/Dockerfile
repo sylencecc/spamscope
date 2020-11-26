@@ -47,9 +47,9 @@ RUN set -ex; \
 # Faup
     git clone https://github.com/stricaud/faup.git ${FAUP_PATH} && mkdir -p $FAUP_PATH/build && cd $FAUP_PATH/build && cmake .. && make && make install && echo '/usr/local/lib' | tee -a /etc/ld.so.conf.d/faup.conf && ldconfig; \
 # Thug
-    git clone https://github.com/area1/stpyv8.git /opt/stpyv8 && cd /opt/stpyv8 && python2 setup.py v8 && python3 setup.py stpyv8 && python3 setup.py install; \
-    # --no-binary to enable configuration files in /etc/thug: https://stackoverflow.com/questions/47460804/copy-configuration-file-on-installation
-    pip install thug --no-binary=thug; \  
+    git clone --depth 1 --branch v8.6.395.24 https://github.com/area1/stpyv8.git /opt/stpyv8 && cd /opt/stpyv8 && python2 setup.py v8 && python3 setup.py stpyv8 && python3 setup.py install; \
+    # Make sure python3-wheel is not installed, because of https://stackoverflow.com/questions/47460804/copy-configuration-file-on-installation
+    pip install thug; \  
 # SpamScope
     mkdir -p "/var/log/spamscope" "/etc/spamscope"; \
     cd $SPAMSCOPE_PATH; \
