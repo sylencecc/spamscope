@@ -5,8 +5,9 @@ services:
 
   # SpamScope
   spamscope-debug:
-    image: spamscope-debug
-    build: .
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
     container_name: spamscope
     mem_limit: 4g
     ports:

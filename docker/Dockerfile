@@ -1,21 +1,68 @@
-FROM fmantuano/spamscope-deps
+ARG APACHE_STORM_VER="2.2.0"
+FROM apache-storm:${APACHE_STORM_VER}
 
-# environment variables
-ARG SPAMSCOPE_VER="develop"
+# Environment variables
+ARG TIKA_VER="1.24.1" 
+ARG SPAMSCOPE_BRANCH="develop"
 
-ENV SPAMASSASSIN_ENABLED="True" \
+ENV FAUP_PATH="/opt/faup-master" \
+    # Disable warning when running lein as root
+    LEIN_ROOT="yes" \
+    SPAMASSASSIN_ENABLED="True" \
     SPAMSCOPE_CONF_FILE="/etc/spamscope/spamscope.yml" \
     SPAMSCOPE_PATH="/opt/spamscope" \
-    THUG_ENABLED="True"
+    THUG_ENABLED="True" \
+    TIKA_APP_JAR="/opt/tika-app-${TIKA_VER}.jar"
 
-# install SpamScope
+COPY ./ ${SPAMSCOPE_PATH}/
+
+# Install system packages
 RUN set -ex; \
+    apt-get -y update; \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        cmake \
+        file \
+        git \
+        libgraphviz-dev \
+        leiningen \
+        libboost-dev \
+        libboost-python-dev \
+        libboost-system-dev \
+        libemu-dev \
+        libemail-outlook-message-perl \
+        libmagic1 \
+        libfuzzy-dev \
+        p7zip-full \
+        pkg-config \
+        python3-graphviz \
+        python3-pip \
+        spamassassin \
+        unrar \
+        unzip; \
+# Upgrade python tools
+    pip3 install --upgrade pip setuptools; \
+# Apache Tika
+    curl -So ${TIKA_APP_JAR} https://archive.apache.org/dist/tika/tika-app-${TIKA_VER}.jar; \
+# Faup
+    git clone https://github.com/stricaud/faup.git ${FAUP_PATH} && mkdir -p $FAUP_PATH/build && cd $FAUP_PATH/build && cmake .. && make && make install && echo '/usr/local/lib' | tee -a /etc/ld.so.conf.d/faup.conf && ldconfig; \
+# Thug
+    git clone https://github.com/area1/stpyv8.git /opt/stpyv8 && cd /opt/stpyv8 && python2 setup.py v8 && python3 setup.py stpyv8 && python3 setup.py install; \
+    # --no-binary to enable configuration files in /etc/thug: https://stackoverflow.com/questions/47460804/copy-configuration-file-on-installation
+    pip install thug --no-binary=thug; \  
+# SpamScope
     mkdir -p "/var/log/spamscope" "/etc/spamscope"; \
-    git clone -b ${SPAMSCOPE_VER} --single-branch https://github.com/SpamScope/spamscope.git ${SPAMSCOPE_PATH}; \
     cd $SPAMSCOPE_PATH; \
     pip install -r requirements_optional.txt; \
-    python setup.py install; \
+    python3 setup.py install; \
     sparse jar -s; \
-    pip install -U thug;
+# Purge unused packages
+    apt-get -yqq purge \
+        build-essential \
+        cmake; \
+    apt-get -yqq autoremove && dpkg -l | grep ^rc | awk '{print $2}' | xargs dpkg --purge; \
+# Cleaning
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*
     
 WORKDIR ${SPAMSCOPE_PATH}
