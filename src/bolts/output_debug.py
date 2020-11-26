@@ -48,5 +48,5 @@ class OutputDebug(AbstractBolt):
         output = os.path.join(self._output_path, "{}.json".format(
             sha256_random))
 
-        with open(output, "w") as f:
+        with open(output, "wb") as f:
             f.write(mail.encode('utf-8'))
